@@ -6,27 +6,18 @@ Created on Thu Jan 27 13:37:11 2022
 """
 
 # Libraries
-import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import dates as mpl_dates
 import pandas as pd
 
-# Importing Dataset
-dataset = pd.read_csv('./Water_Data.csv')
-
-# Convert the string to pandas datetime
-dataset['timestamp'] = pd.to_datetime(dataset['timestamp']) 
-
-# Filling the missing NaN data in Missing data pad = propagate last valid observation to next value
-dataset = dataset.fillna(method = 'pad')
-
+from DataParser import readFile
+dataset, X, y = readFile()
 
 # Taking  two sub data sets both for graph plotting and sub data
 sub_dataset = dataset.filter(['timestamp','Turb(FNU)'], axis=1)
 graph_plotter = sub_dataset
 
-X = dataset.iloc[:,:1].values
-y = dataset.iloc[:,2:3].values
+
 
 #--------------------------- Start of test data split ----------------------
 
@@ -52,7 +43,7 @@ graph_plotter = sub_dataset
 # If used for test model change the X to X_train in fitting 
 # While cahnge the predict to the X_train and decision_function
 from sklearn.ensemble import IsolationForest
-model = IsolationForest(n_estimators = 100, max_samples = 'auto', contamination = 0.4, random_state = 42)
+model = IsolationForest(n_estimators = 100, max_samples = 'auto', contamination = 'auto', random_state = 42)
 model.fit(X, y)
 
 # Predicting the result with Isolation Forest Method
@@ -61,7 +52,8 @@ anomaly_score  = model.decision_function(X)
 
 
 # ----------------------- Graph Visualization Below -----------------------
-
+# Cannot plot graph in mutliple dimensions so only the Time-Trubdity is being 
+# plotted 
 
 # Visualizing the Isolation Forest Results
 graph_plotter['anomaly']= pd.Series(anamoly)
@@ -73,7 +65,7 @@ anomaly_data = anomaly_data.fillna(method = 'pad')
 
 
 # Prints the percentage anomalies in data
-print("Accuracy:", list(anamoly).count(1)/anamoly.shape[0])
+print("Accuracy:", (list(anamoly).count(1)/anamoly.shape[0]) * 100)
 print("Percentage of anomalies in data: {:.2f}".format((len(graph_plotter.loc[graph_plotter['anomaly']==-1])/len(graph_plotter))*100))
 
 plt.style.use('seaborn')
@@ -86,8 +78,8 @@ plt.gcf().autofmt_xdate()
 date_format = mpl_dates.DateFormatter('%d, %b, %Y')
 plt.gca().xaxis.set_major_formatter(date_format)
 plt.tight_layout()
-plt.xlabel("Datatime Index ")
+plt.xlabel("Datatime Index")
 plt.ylabel("Turbidity Values(FNU)")
-plt.title('Anomaly Detection : Isolation Forest Method')
+plt.title("Anomaly Detection : Isolation Forest Method")
 plt.legend()
 plt.show()
