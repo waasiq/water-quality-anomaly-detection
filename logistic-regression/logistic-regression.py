@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib import dates as mpl_dates
 # Data upload
-dataset = pd.read_csv('..\Doc\Water_Data.csv')
+dataset = pd.read_csv('../data/water-data-log-reg.csv')
 
 dataset['timestamp'] = pd.to_datetime(dataset['timestamp']) 
 

@@ -12,7 +12,7 @@ from matplotlib import dates as mpl_dates
 import pandas as pd
 
 # Importing Dataset
-dataset = pd.read_csv('./Water_Data.csv')
+dataset = pd.read_csv('../data/water-data-all.csv')
 
 # Convert the string to pandas datetime
 dataset['timestamp'] = pd.to_datetime(dataset['timestamp']) 
