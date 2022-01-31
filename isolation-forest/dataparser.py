@@ -6,7 +6,7 @@ import pandas as pd
 
 
 def readFile():
-    dataset = pd.read_csv('../Data/Water_Data.csv')
+    dataset = pd.read_csv('../data/water-data-all.csv')
 
     # Convert the string to pandas datetime
     dataset['timestamp'] = pd.to_datetime(dataset['timestamp']) 
