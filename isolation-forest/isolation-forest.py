@@ -11,14 +11,7 @@ import matplotlib.pyplot as plt
 from matplotlib import dates as mpl_dates
 import pandas as pd
 
-# Importing Dataset
-dataset = pd.read_csv('../data/water-data-all.csv')
 
-# Convert the string to pandas datetime
-dataset['timestamp'] = pd.to_datetime(dataset['timestamp']) 
-
-# Filling the missing NaN data in Missing data pad = propagate last valid observation to next value
-dataset = dataset.fillna(method = 'pad')
 
 
 # Taking  two sub data sets both for graph plotting and sub data
