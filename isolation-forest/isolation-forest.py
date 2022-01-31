@@ -10,9 +10,6 @@ import matplotlib.pyplot as plt
 from matplotlib import dates as mpl_dates
 import pandas as pd
 
-#from DataParser import readFile
-#Dataset, X, y = readFile()
-
 # Taking  two sub data sets both for graph plotting and sub data
 sub_dataset = dataset.filter(['timestamp','Turb(FNU)'], axis=1)
 graph_plotter = sub_dataset
