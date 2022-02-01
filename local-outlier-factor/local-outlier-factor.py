@@ -1,28 +1,29 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Jan 27 13:37:11 2022
+Created on Tue Feb  1 13:50:49 2022
 
 @author: waasiq
 """
 
 # Libraries
 import matplotlib.pyplot as plt
+from matplotlib import dates as mpl_dates
 import pandas as pd
 import numpy as np
 
-from dataparser import readFile
 
 dataset = pd.read_csv('../data/water-data-all.csv')
-
 dataset = dataset.fillna(method = 'pad')
 
+# Convert the string to pandas datetime
+#dataset['timestamp'] = pd.to_datetime(dataset['timestamp']) 
+    
+# Filling the missing NaN data in Missing data pad = propagate last valid observation to next value
+#dataset = dataset.fillna(method = 'pad')
 
+    
 X = dataset.iloc[:,1:4].values # other variables - to send to model
 y = dataset.iloc[:,:1].values  # dates
-
-
-
-dataset,X,y = readFile()
 
 
 #--------------------------- Start of test data split ----------------------
@@ -31,23 +32,30 @@ dataset,X,y = readFile()
 
 from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)
+X_test = X_test.astype('float64')
 
 
 #--------------------------- End of Test Data Split -----------------------
 
 # Fitting the IsolationForest model to the dataset
-from sklearn.ensemble import IsolationForest
-model = IsolationForest(n_estimators = 100, max_samples = 'auto', contamination = 'auto', random_state = 42)
+from sklearn.neighbors import LocalOutlierFactor
+model = LocalOutlierFactor(n_neighbors = 20, novelty = True, contamination = 'auto')
 model.fit(X_train)
+
 
 # Predicting the result with Isolation Forest Method
 y_pred = model.predict(X_test)
-anomaly_score  = model.decision_function(X_test)
+#anomaly_score  = model.decision_function(X_test)
 
 outcome = pd.DataFrame(data = y_test, index = range(1035), columns = ['timestamp'] )
-outcomeAnamoly = pd.DataFrame(data = y_pred , index = range(1035), columns = ['y_pred'] )
+outcomeAnamoly = pd.DataFrame(data = y_pred, index = range(1035), columns = ['y_pred'] )
+inputData = pd.DataFrame(data = X_test, index = range(1035), columns = ['SC(uS)','Turb(FNU)','DO(mg/l)'])
+
+outputFrame = pd.concat([outcomeAnamoly , inputData], axis = 1)
+outputFrame.to_csv(r'../data/test-data-w-anomaly.csv', sep='\t', encoding='utf-8', header='true')
 
 outcomeConcat = pd.concat([outcome , outcomeAnamoly], axis = 1)
+
 
 # ----------------------- Graph Visualization Below -----------------------
 
