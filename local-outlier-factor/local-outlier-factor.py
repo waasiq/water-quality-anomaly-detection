@@ -32,7 +32,6 @@ y = dataset.iloc[:,:1].values  # dates
 
 from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)
-X_test = X_test.astype('float64')
 
 
 #--------------------------- End of Test Data Split -----------------------
@@ -52,7 +51,8 @@ outcomeAnamoly = pd.DataFrame(data = y_pred, index = range(1035), columns = ['y_
 inputData = pd.DataFrame(data = X_test, index = range(1035), columns = ['SC(uS)','Turb(FNU)','DO(mg/l)'])
 
 outputFrame = pd.concat([outcomeAnamoly , inputData], axis = 1)
-outputFrame.to_csv(r'../data/test-data-w-anomaly.csv', sep='\t', encoding='utf-8', header='true')
+
+outputFrame.to_excel('../data/data-w-anomaly.xlsx')
 
 outcomeConcat = pd.concat([outcome , outcomeAnamoly], axis = 1)
 
