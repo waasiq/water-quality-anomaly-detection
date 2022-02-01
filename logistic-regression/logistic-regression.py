@@ -36,8 +36,9 @@ print(outcomeConcat)
 #------------------------------------------
 x = outcomeConcat.iloc[:,1:]
 y = outcomeConcat.iloc[:,0:1]
-X = x.values
-Y = y.values
+
+X = x.values # the other variables
+Y = y.values # dates
 
 from sklearn.preprocessing import StandardScaler
 sc=StandardScaler()
@@ -48,7 +49,7 @@ from sklearn.linear_model import LogisticRegression
 logr = LogisticRegression(random_state=0)
 logr.fit(X,Y)
 
-Y_pred = logr.predict(X)
+Y_pred = logr.predict(X) #Y_pred is a date
 
 print(Y_pred)
 anomaly_score  = logr.decision_function(X)
