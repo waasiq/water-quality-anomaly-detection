@@ -36,18 +36,18 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, rando
 
 #--------------------------- End of Test Data Split -----------------------
 
-# Fitting the IsolationForest model to the dataset
+# Fitting the LOF model to the dataset
 from sklearn.neighbors import LocalOutlierFactor
 model = LocalOutlierFactor(n_neighbors = 20, novelty = True, contamination = 'auto')
 model.fit(X_train)
 
 
-# Predicting the result with Isolation Forest Method
+# Predicting the result with Local Outlier  Method
 y_pred = model.predict(X_test)
-#anomaly_score  = model.decision_function(X_test)
+anomaly_score  = model.decision_function(X_test)
 
 outcome = pd.DataFrame(data = y_test, index = range(1035), columns = ['timestamp'] )
-outcomeAnamoly = pd.DataFrame(data = y_pred, index = range(1035), columns = ['y_pred'] )
+outcomeAnamoly = pd.DataFrame(data = anomaly_score, index = range(1035), columns = ['anomaly_score'] )
 inputData = pd.DataFrame(data = X_test, index = range(1035), columns = ['SC(uS)','Turb(FNU)','DO(mg/l)'])
 
 outputFrame = pd.concat([outcomeAnamoly , inputData], axis = 1)
@@ -56,6 +56,7 @@ outputFrame.to_excel('../data/data-w-anomaly.xlsx')
 
 outcomeConcat = pd.concat([outcome , outcomeAnamoly], axis = 1)
 
+'''
 
 # ----------------------- Graph Visualization Below -----------------------
 
@@ -78,3 +79,4 @@ plt.ylabel("Anomaly")
 plt.title("Anomaly Detection : Isolation Forest Method")
 plt.legend()
 plt.show()
+'''

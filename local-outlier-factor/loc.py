@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Jan 27 13:37:11 2022
+Created on Thu Feb  3 09:02:25 2022
 
 @author: waasiq
-
 """
 
 # Libraries
@@ -14,7 +13,7 @@ import numpy as np
 
 dataset = pd.read_csv('../data/custom-dataset.csv')
 
-X = dataset.iloc[:,:-1].values # other variables - to send to model
+X = dataset.iloc[:,:5].values # other variables - to send to model
 y = dataset.iloc[:,5:].values  # potability
 
 #--------------------------- Start of test data split ----------------------
@@ -24,16 +23,25 @@ from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)
 
 
+# Data scaling
+from sklearn.preprocessing import StandardScaler
+sc_X = StandardScaler()
+X_train = sc_X.fit_transform(X_train)
+X_test = sc_X.transform(X_test)
+
+
 #--------------------------- End of Test Data Split -----------------------
 
-# Fitting the IsolationForest model to the dataset
-from sklearn.ensemble import IsolationForest
-model = IsolationForest(n_estimators = 100, max_samples = 'auto', contamination = 'auto', random_state = 42)
-model.fit(X_train, y_train)
+# Fitting the LOF model to the dataset
+from sklearn.neighbors import LocalOutlierFactor
+model = LocalOutlierFactor(n_neighbors = 20, novelty = True, contamination = 'auto')
+model.fit(X_train)
 
-# Predicting the result with Isolation Forest Method
+
+# Predicting the result with Local Outlier  Method
 y_pred = model.predict(X_test)
 anomaly_score  = model.decision_function(X_test)
+
 
 if list(y_pred).count(False) > list(y_test).count(False):
    print("Accuracy true False(False Negative):", (list(y_test).count(False)/list(y_pred).count(False)) * 100)

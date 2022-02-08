@@ -27,13 +27,12 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, rando
 #--------------------------- End of Test Data Split -----------------------
 
 # Fitting the IsolationForest model to the dataset
-from sklearn.ensemble import IsolationForest
-model = IsolationForest(n_estimators = 100, max_samples = 'auto', contamination = 'auto', random_state = 42)
+from sklearn.ensemble import RandomForestClassifier
+model = RandomForestClassifier(n_estimators = 200, criterion = 'entropy' ,   random_state = 0)
 model.fit(X_train, y_train)
 
 # Predicting the result with Isolation Forest Method
 y_pred = model.predict(X_test)
-anomaly_score  = model.decision_function(X_test)
 
 if list(y_pred).count(False) > list(y_test).count(False):
    print("Accuracy true False(False Negative):", (list(y_test).count(False)/list(y_pred).count(False)) * 100)

@@ -9,48 +9,34 @@ Created on Fri Jan 28 14:59:57 2022
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-from matplotlib import dates as mpl_dates
+
 # Data upload
-dataset = pd.read_csv('..\Doc\Water_Data.csv')
+dataset = pd.read_csv('../data/new-data.csv')
 
-dataset['timestamp'] = pd.to_datetime(dataset['timestamp']) 
-
-time = dataset.iloc[:,0:1]
-#------------------------------------------
-# Missing values ​​are taken as the mean value
-from sklearn.impute import SimpleImputer
-imputer = SimpleImputer(missing_values=np.nan, strategy='mean')
-missingValues = dataset.iloc[:, 1:4].values
-
-imputer = imputer.fit((missingValues[:,0:3]))
-missingValues[:,0:3] = imputer.transform(missingValues[:,0:3])
-print(missingValues)
+X = dataset.iloc[:,:-1].values # other variables - to send to model
+y = dataset.iloc[:,9:].values  # potability
 
 #------------------------------------------
-outcome = pd.DataFrame(data=missingValues, index=range(5171), columns=["SC(uS)", "Turb(FNU)", "DO(mg/L)"])
-print(outcome)
+#outcome = pd.DataFrame(data=missingValues, index=range(5171), columns=["SC(uS)", "Turb(FNU)", "DO(mg/L)"])
+#print(outcome)
 
-outcomeConcat = pd.concat([time, outcome], axis = 1)
-print(outcomeConcat)
+#outcomeConcat = pd.concat([time, outcome], axis = 1)
+#print(outcomeConcat)
 
-#------------------------------------------
-x = outcomeConcat.iloc[:,1:]
-y = outcomeConcat.iloc[:,0:1]
+#-----------------------------------------
 
-X = x.values # the other variables
-Y = y.values # dates
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)
 
-from sklearn.preprocessing import StandardScaler
-sc=StandardScaler()
-X = sc.fit_transform(X)
 
 # Logistic Regression
 from sklearn.linear_model import LogisticRegression
 logr = LogisticRegression(random_state=0)
-logr.fit(X,Y)
+logr.fit(X_train,y_train)
 
-Y_pred = logr.predict(X) #Y_pred is a date
+Y_pred = logr.predict(X_test) #Y_pred is a date
 
+'''
 print(Y_pred)
 anomaly_score  = logr.decision_function(X)
 #quality = pd.DataFrame(data=Y_pred, index=range(99), columns=["Quality"])
@@ -82,6 +68,4 @@ plt.title("Anomaly Detection : Logistic Regression Method")
 plt.legend()
 plt.show()
 
-
-
-
+'''
