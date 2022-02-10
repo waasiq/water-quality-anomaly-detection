@@ -10,7 +10,6 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
-from dataparser import readFile
 
 dataset = pd.read_csv('../data/time-series-data/water-data-all.csv')
 
@@ -22,7 +21,6 @@ y = dataset.iloc[:,:1].values  # dates
 
 
 
-dataset,X,y = readFile()
 
 
 #--------------------------- Start of test data split ----------------------

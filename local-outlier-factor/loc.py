@@ -43,20 +43,20 @@ y_pred = model.predict(X_test)
 anomaly_score  = model.decision_function(X_test)
 
 
-if list(y_pred).count(False) > list(y_test).count(False):
-   print("Accuracy true False(False Negative):", (list(y_test).count(False)/list(y_pred).count(False)) * 100)
-   FP = list(y_test).count(False)/list(y_pred).count(False)
+if list(y_pred).count(-1) > list(y_test).count(False):
+   print("Accuracy true False(False Negative):", (list(y_test).count(False)/list(y_pred).count(-1)) * 100)
+   FP = list(y_test).count(False)/list(y_pred).count(-1)
 else:
-    print("Accuracy true False(False Negative):", (list(y_pred).count(False)/list(y_test).count(False)) * 100)
-    FP = list(y_pred).count(False)/list(y_test).count(False)
+    print("Accuracy true False(False Negative):", (list(y_pred).count(-1)/list(y_test).count(False)) * 100)
+    FP = list(y_pred).count(-1)/list(y_test).count(False)
 
-if list(y_pred).count(True) > list(y_test).count(True):
-    print("Accuracy true True(True Positive):", (list(y_test).count(True)/list(y_pred).count(True)) * 100)
-    TP = list(y_test).count(True)/list(y_pred).count(True)
+if list(y_pred).count(1) > list(y_test).count(True):
+    print("Accuracy true True(True Positive):", (list(y_test).count(True)/list(y_pred).count(1)) * 100)
+    TP = list(y_test).count(True)/list(y_pred).count(1)
 else:
-    print("Accuracy true True(True Positive):", (list(y_pred).count(True)/list(y_test).count(True)) * 100)
-    TP = list(y_pred).count(True)/list(y_test).count(True)
+    print("Accuracy true True(True Positive):", (list(y_pred).count(1)/list(y_test).count(True)) * 100)
+    TP = list(y_pred).count(1)/list(y_test).count(True)
 
 topVeriSayisi = list(y_test).count(True) + list(y_test).count(False) 
-positive = list(y_pred).count(True)*TP + list(y_pred).count(False)*FP
+positive = list(y_pred).count(1)*TP + list(y_pred).count(-1)*FP
 print("Accuracy: ", positive/topVeriSayisi*100)

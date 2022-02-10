@@ -12,7 +12,7 @@ import pandas as pd
 from matplotlib import dates as mpl_dates
 
 # Data upload
-dataset = pd.read_csv('..\Doc\Water_Data.csv')
+dataset = pd.read_csv('..\data\custom-dataset.csv')
 
 parameters = dataset.iloc[:,0:5].values
 Potability = dataset.iloc[:,5:6].values
